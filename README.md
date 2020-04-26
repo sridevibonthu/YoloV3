@@ -5,6 +5,9 @@ YoloV3 Simplified for training on Colab with custom dataset for one class (**GUN
 _A Collage of Training images_
 ![image](https://github.com/sridevibonthu/YoloV3/blob/master/train_batch0.png)
 
+_A Collage of Testing images_
+![image](https://github.com/sridevibonthu/YoloV3/blob/master/test_batch0.png)
+
 Class - gun
 
 1. We have added a 500 images of unique object (gun) in the folder customdata after annotating the images using Annotation Tool. The structure we followed to store them is
