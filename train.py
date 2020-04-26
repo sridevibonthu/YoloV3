@@ -12,7 +12,6 @@ from utils.utils import *
 mixed_precision = True
 try:  # Mixed precision training https://github.com/NVIDIA/apex
     from apex import amp
-    print("mixed precision is working")
 except:
     # print('Apex recommended for mixed precision and faster training: https://github.com/NVIDIA/apex')
     mixed_precision = False  # not installed
@@ -20,7 +19,6 @@ except:
 wdir = 'weights' + os.sep  # weights dir
 last = wdir + 'last.pt'
 best = wdir + 'best.pt'
-
 results_file = 'results.txt'
 
 # Hyperparameters https://github.com/ultralytics/yolov3/issues/310
@@ -35,13 +33,13 @@ hyp = {'giou': 3.54,  # giou loss gain
        'lrf': 0.0005,  # final learning rate (with cos scheduler)
        'momentum': 0.937,  # SGD momentum
        'weight_decay': 0.000484,  # optimizer weight decay
-       'fl_gamma': 1.5,  # focal loss gamma (efficientDet default is gamma=1.5)
+       'fl_gamma': 0.0,  # focal loss gamma (efficientDet default is gamma=1.5)
        'hsv_h': 0.0138,  # image HSV-Hue augmentation (fraction)
        'hsv_s': 0.678,  # image HSV-Saturation augmentation (fraction)
        'hsv_v': 0.36,  # image HSV-Value augmentation (fraction)
-       'degrees': 10,  # image rotation (+/- deg)
-       'translate': 0.05,  # image translation (+/- fraction)
-       'scale': 0,  # image scale (+/- gain)
+       'degrees': 1.98 * 0,  # image rotation (+/- deg)
+       'translate': 0.05 * 0,  # image translation (+/- fraction)
+       'scale': 0.05 * 0,  # image scale (+/- gain)
        'shear': 0.641 * 0}  # image shear (+/- deg)
 
 # Overwrite hyp with hyp*.txt (optional)
@@ -70,7 +68,6 @@ def train():
     assert math.fmod(imgsz_min, gs) == 0, '--img-size %g must be a %g-multiple' % (imgsz_min, gs)
     opt.multi_scale |= imgsz_min != imgsz_max  # multi if different (min, max)
     if opt.multi_scale:
-        print("multi_scale is working")
         if imgsz_min == imgsz_max:
             imgsz_min //= 1.5
             imgsz_max //= 0.667
@@ -91,7 +88,7 @@ def train():
         os.remove(f)
 
     # Initialize model
-    model = Darknet(cfg, mean=data_dict['mean'], std=data_dict['std']).to(device)
+    model = Darknet(cfg).to(device)
 
     # Optimizer
     pg0, pg1, pg2 = [], [], []  # optimizer parameter groups
@@ -255,8 +252,7 @@ def train():
 
             # Multi-Scale training
             if opt.multi_scale:
-                print("multi-scale training is working!!!!!!!!!!!!!")
-                if ni / accumulate % 1 == 0:  #  adjust img_size (67% - 150%) every 1 batch
+                if ni / accumulate % 1 == 0:  #  adjust img_size (67% - 150%) every 1 batch
                     img_size = random.randrange(grid_min, grid_max + 1) * gs
                 sf = img_size / max(imgs.shape[2:])  # scale factor
                 if sf != 1:
@@ -306,7 +302,7 @@ def train():
 
         # Update scheduler
         scheduler.step()
-        #print(f"giou = {hyp['giou']}, cls= {hyp['cls']}, obj = {hyp['obj']}")
+
         # Process epoch results
         ema.update_attr(model)
         final_epoch = epoch + 1 == epochs
@@ -387,8 +383,7 @@ def train():
 
     return results
 
-#416 mean, std: [0.53052073 0.50849256 0.49106059] [0.35259007 0.34803888 0.34939448]
-#608 mean, std: [0.53348429 0.51124677 0.49346311] [0.35328567 0.34933934 0.35061533]
+
 if __name__ == '__main__':
     parser = argparse.ArgumentParser()
     parser.add_argument('--epochs', type=int, default=300)  # 500200 batches at bs 16, 117263 COCO images = 273 epochs
@@ -410,13 +405,7 @@ if __name__ == '__main__':
     parser.add_argument('--device', default='', help='device id (i.e. 0 or 0,1 or cpu)')
     parser.add_argument('--adam', action='store_true', help='use adam optimizer')
     parser.add_argument('--single-cls', action='store_true', help='train as single-class dataset')
-    parser.add_argument('--savepath', type=str, default = wdir, help='path to save the model, defaults to weights')
     opt = parser.parse_args()
-    if opt.savepath != wdir:
-        wdir = opt.savepath  # weights dir
-        last = os.path.join(wdir, 'last.pt')
-        best =  os.path.join(wdir, 'best.pt')
-
     opt.weights = last if opt.resume else opt.weights
     print(opt)
     opt.img_size.extend([opt.img_size[-1]] * (3 - len(opt.img_size)))  # extend to 3 sizes (min, max, test)
