@@ -1,6 +1,6 @@
 # YoloV3
 ________
-YoloV3 Simplified for training on Colab with custom dataset for one class (GUN)
+YoloV3 Simplified for training on Colab with custom dataset for one class (**GUN**)
 
 _A Collage of Training images_
 ![image](https://github.com/sridevibonthu/YoloV3/blob/master/train_batch0.png)
@@ -32,6 +32,7 @@ data
 
 
 **Results**
+
 After training for 300 Epochs, results look awesome!
 
 ![image](https://github.com/sridevibonthu/YoloV3/blob/master/output/img080.jpg)
