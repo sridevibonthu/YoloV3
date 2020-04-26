@@ -1,6 +1,6 @@
 # YoloV3
 ________
-YoloV3 Simplified for training on Colab with custom dataset for one class
+YoloV3 Simplified for training on Colab with custom dataset for one class (GUN)
 
 _A Collage of Training images_
 ![image](https://github.com/sridevibonthu/YoloV3/blob/master/train_batch0.png)
@@ -20,8 +20,9 @@ data
       --img002.txt
       --...
     custom.data #data file
-    custom.names #your class names
-    custom.txt #list of name of the images you want your network to be trained on. Currently we are using same file for test/train
+    custom.names #class name
+    customtrain.txt #list of name of the images to train our network.
+    customtest.txt #list of names of the images for validation
 ```
 2. For one class example our custom.data is [here](https://github.com/sridevibonthu/YoloV3/blob/master/data/customdata/custom.data). We used 500 images for training and 100 images for testng.
 2. downloaded the weights (yolov3-spp-ultralytics.pt) from the original ![source](https://drive.google.com/open?id=1LezFG5g3BCW6iYaV89B2i64cqEUZD7e0) and placed in Google Drive. 
