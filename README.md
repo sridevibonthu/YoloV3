@@ -75,4 +75,5 @@ As you can see in the collage image above, a lot is going on, and if you are cre
 **Results**
 After training for 300 Epochs, results look awesome!
 
-![image](https://github.com/theschoolofai/YoloV3/blob/master/output/download.jpeg)
+![image](https://github.com/sridevibonthu/YoloV3/blob/master/output/img080.jpg)
+![image](https://github.com/sridevibonthu/YoloV3/blob/master/output/img082.jpg)
